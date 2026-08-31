@@ -49,13 +49,13 @@ resource "aws_launch_template" "app" {
     resource_type = "instance"
 
     tags = {
-      Name = "${var.project_name}-${var.environment}-app"
+      Name        = "${var.project_name}-${var.environment}-app"
       Environment = var.environment
     }
   }
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-launch_template"
+    Name        = "${var.project_name}-${var.environment}-launch_template"
     Environment = var.environment
   }
 }
