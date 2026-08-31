@@ -28,11 +28,11 @@ keys/
 *.pem
 
 # Terraform
-**/.terraform/*
+**/.terraform/
 *.tfstate
 *.tfstate.*
 .terraform.lock.hcl
-
+terraform/environments/**/*.tfvars
 # Sensitive files
 *.pem
 keys/
