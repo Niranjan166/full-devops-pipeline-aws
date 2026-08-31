@@ -23,3 +23,23 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+keys/
+*.pem
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Sensitive files
+*.pem
+keys/
+*.tfvars
+!terraform/environments/dev/dev.tfvars.example
+!terraform/environments/staging/staging.tfvars.example
+!terraform/environments/prod/prod.tfvars.example
+
+# Environment files
+.env
