@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.project_name}-niru-terraform-state"
+  bucket = "${var.project_name}-nitesh-terraform-state"
 }
 
 resource "aws_s3_bucket_versioning" "terraform_state" {
