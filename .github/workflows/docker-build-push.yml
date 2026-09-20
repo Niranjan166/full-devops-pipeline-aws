@@ -1,0 +1,40 @@
+name : Docker Build and Push
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Backend Image
+        run: |
+          docker build -t 371397858660.dkr.ecr.us-east-1.amazonaws.com/dms-backend:${{ github.sha }} ./application/backend
+
+      - name: Build Frontend Image
+        run: |
+          docker build -t 371397858660.dkr.ecr.us-east-1.amazonaws.com/dms-frontend:${{ github.sha }} ./application/frontend
+
+      - name: Push Backend Image to ECR
+        run: |
+          docker push 371397858660.dkr.ecr.us-east-1.amazonaws.com/dms-backend:${{ github.sha }}
+
+      - name: Push Frontend Image to ECR
+        run: |
+          docker push 371397858660.dkr.ecr.us-east-1.amazonaws.com/dms-frontend:${{ github.sha }}
