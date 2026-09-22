@@ -22,6 +22,7 @@ pipeline {
                 bat 'npm --version'
                 bat 'docker --version'
                 bat 'aws --version'
+                bat 'terraform --version'
             }
         }
 
@@ -54,6 +55,38 @@ pipeline {
             steps {
                 bat 'docker tag %IMAGE_NAME%:%BUILD_NUMBER% %ECR_REPOSITORY%:%BUILD_NUMBER%'
                 bat 'docker push %ECR_REPOSITORY%:%BUILD_NUMBER%'
+            }
+        }
+
+        stage('Terraform Format Check') {
+            steps {
+                dir('terraform') {
+                    bat 'terraform fmt -check -recursive'
+                }
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                dir('terraform') {
+                    bat 'terraform init'
+                }
+            }
+        }
+
+        stage('Terraform Validate') {
+            steps {
+                dir('terraform') {
+                    bat 'terraform validate'
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                dir('terraform') {
+                    bat 'terraform plan -var-file="environments/dev/dev.tfvars"'
+                }
             }
         }
     }
