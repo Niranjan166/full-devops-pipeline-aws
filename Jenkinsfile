@@ -42,26 +42,22 @@ pipeline {
 
         stage('Create Terraform Variables') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'dms-db-password', variable: 'DB_PASSWORD')
-                ]) {
-                    powershell '''
-                @"
-        project_name      = "dms"
-        environment       = "dev"
-        aws_region        = "us-east-1"
-        vpc_cidr          = "10.0.0.0/16"
-        az_count          = 2
-        instance_type     = "t3.micro"
-        key_pair_name     = "dms-dev-key"
-        lifecycle_days    = 30
-        db_name           = "dms_db"
-        db_username       = "admin"
-        db_password       = "$env:DB_PASSWORD"
-        db_instance_class = "db.t3.micro"
-        alert_email       = "niranjan01125@gmail.com"
-        "@ | Set-Content -Path "terraform/environments/dev/dev.tfvars"
-                     '''
+                withCredentials([string(credentialsId: 'dms-db-password', variable: 'DB_PASSWORD')]) {
+                    bat '''
+                        echo project_name = "dms" > terraform\\environments\\dev\\dev.tfvars
+                        echo environment = "dev" >> terraform\\environments\\dev\\dev.tfvars
+                        echo aws_region = "us-east-1" >> terraform\\environments\\dev\\dev.tfvars
+                        echo vpc_cidr = "10.0.0.0/16" >> terraform\\environments\\dev\\dev.tfvars
+                        echo az_count = 2 >> terraform\\environments\\dev\\dev.tfvars
+                        echo instance_type = "t3.micro" >> terraform\\environments\\dev\\dev.tfvars
+                        echo key_pair_name = "dms-dev-key" >> terraform\\environments\\dev\\dev.tfvars
+                        echo lifecycle_days = 30 >> terraform\\environments\\dev\\dev.tfvars
+                        echo db_name = "dms_db" >> terraform\\environments\\dev\\dev.tfvars
+                        echo db_username = "admin" >> terraform\\environments\\dev\\dev.tfvars
+                        echo db_password = "%DB_PASSWORD%" >> terraform\\environments\\dev\\dev.tfvars
+                        echo db_instance_class = "db.t3.micro" >> terraform\\environments\\dev\\dev.tfvars
+                        echo alert_email = "niranjan01125@gmail.com" >> terraform\\environments\\dev\\dev.tfvars
+                    '''
                 }
             }
         }
