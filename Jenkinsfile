@@ -74,7 +74,7 @@ pipeline {
                     bat 'docker push %ECR_REPOSITORY%:%BUILD_NUMBER%'
 
                     dir('terraform') {
-                        bat 'terraform fmt -check -recursive'
+                        bat 'terraform fmt -check -recursive -diff'
                         bat 'terraform init'
                         bat 'terraform validate'
                         bat 'terraform plan -var-file="environments/dev/dev.tfvars"'
