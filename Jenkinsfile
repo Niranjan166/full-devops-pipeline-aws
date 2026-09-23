@@ -60,7 +60,7 @@ pipeline {
                             bat '''
                                 echo environment = "dev" >> environments\\dev\\dev.tfvars
                                 echo aws_region = "us-east-1" >> environments\\dev\\dev.tfvars
-                                echo project_name = "dms" > environments\\dev\\dev.tfvars
+                                echo project_name = "dms" >> environments\\dev\\dev.tfvars
                                 echo vpc_cidr = "10.0.0.0/16" >> environments\\dev\\dev.tfvars
                                 echo az_count = 2 >> environments\\dev\\dev.tfvars
                                 echo instance_type = "t3.micro" >> environments\\dev\\dev.tfvars
