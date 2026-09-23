@@ -40,28 +40,6 @@ pipeline {
             }
         }
 
-        stage('Create Terraform Variables') {
-            steps {
-                withCredentials([string(credentialsId: 'dms-db-password', variable: 'DB_PASSWORD')]) {
-                    bat '''
-                        echo project_name = "dms" > terraform\\environments\\dev\\dev.tfvars
-                        echo environment = "dev" >> terraform\\environments\\dev\\dev.tfvars
-                        echo aws_region = "us-east-1" >> terraform\\environments\\dev\\dev.tfvars
-                        echo vpc_cidr = "10.0.0.0/16" >> terraform\\environments\\dev\\dev.tfvars
-                        echo az_count = 2 >> terraform\\environments\\dev\\dev.tfvars
-                        echo instance_type = "t3.micro" >> terraform\\environments\\dev\\dev.tfvars
-                        echo key_pair_name = "dms-dev-key" >> terraform\\environments\\dev\\dev.tfvars
-                        echo lifecycle_days = 30 >> terraform\\environments\\dev\\dev.tfvars
-                        echo db_name = "dms_db" >> terraform\\environments\\dev\\dev.tfvars
-                        echo db_username = "admin" >> terraform\\environments\\dev\\dev.tfvars
-                        echo db_password = "%DB_PASSWORD%" >> terraform\\environments\\dev\\dev.tfvars
-                        echo db_instance_class = "db.t3.micro" >> terraform\\environments\\dev\\dev.tfvars
-                        echo alert_email = "niranjan01125@gmail.com" >> terraform\\environments\\dev\\dev.tfvars
-                    '''
-                }
-            }
-        }
-
         stage('AWS Deployment Pipeline') {
             steps {
                 withCredentials([
@@ -77,6 +55,23 @@ pipeline {
                         bat 'terraform fmt -check -recursive -diff'
                         bat 'terraform init'
                         bat 'terraform validate'
+                        withCredentials([string(credentialsId: 'dms-db-password', variable: 'DB_PASSWORD')]) {
+                            bat '''
+                                echo environment = "dev" >> terraform\\environments\\dev\\dev.tfvars
+                                echo aws_region = "us-east-1" >> terraform\\environments\\dev\\dev.tfvars
+                                echo project_name = "dms" > terraform\\environments\\dev\\dev.tfvars
+                                echo vpc_cidr = "10.0.0.0/16" >> terraform\\environments\\dev\\dev.tfvars
+                                echo az_count = 2 >> terraform\\environments\\dev\\dev.tfvars
+                                echo instance_type = "t3.micro" >> terraform\\environments\\dev\\dev.tfvars
+                                echo key_pair_name = "dms-dev-key" >> terraform\\environments\\dev\\dev.tfvars
+                                echo lifecycle_days = 30 >> terraform\\environments\\dev\\dev.tfvars
+                                echo db_name = "dms_db" >> terraform\\environments\\dev\\dev.tfvars
+                                echo db_username = "admin" >> terraform\\environments\\dev\\dev.tfvars
+                                echo db_password = "%DB_PASSWORD%" >> terraform\\environments\\dev\\dev.tfvars
+                                echo db_instance_class = "db.t3.micro" >> terraform\\environments\\dev\\dev.tfvars
+                                echo alert_email = "niranjan01125@gmail.com" >> terraform\\environments\\dev\\dev.tfvars
+                            '''
+                        }
                         bat 'terraform plan -var-file="environments/dev/dev.tfvars"'
                     }
                 }
