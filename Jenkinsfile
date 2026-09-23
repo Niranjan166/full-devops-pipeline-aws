@@ -74,6 +74,7 @@ pipeline {
                             '''
                         }
                         bat 'terraform plan -var-file="environments/dev/dev.tfvars"'
+                        bat 'terraform apply -var-file="environments/dev/dev.tfvars" -auto-approve'
                     }
                 }
             }
