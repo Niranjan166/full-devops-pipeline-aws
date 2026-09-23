@@ -40,56 +40,26 @@ pipeline {
             }
         }
 
-        stage('Login to AWS ECR') {
+        stage('AWS Deployment Pipeline') {
             steps {
                 withCredentials([
                     [$class: 'AmazonWebServicesCredentialsBinding', 
                     credentialsId: 'ID: aws-ecr-credentials']
                 ]) { 
+                    bat 'aws sts get-caller-identity'
                     bat 'aws ecr get-login-password --region %AWS_REGION% | docker login --username AWS --password-stdin %ECR_REGISTRY%'
+                    bat 'docker tag %IMAGE_NAME%:%BUILD_NUMBER% %ECR_REPOSITORY%:%BUILD_NUMBER%'
+                    bat 'docker push %ECR_REPOSITORY%:%BUILD_NUMBER%'
+
+                    dir('terraform') {
+                        bat 'terraform fmt -check -recursive'
+                        bat 'terraform init'
+                        bat 'terraform validate'
+                        bat 'terraform plan -var-file="environments/dev/dev.tfvars"'
+                    }
                 }
             }
         }
-
-        stage('Push Docker Image to ECR') {
-            steps {
-                bat 'docker tag %IMAGE_NAME%:%BUILD_NUMBER% %ECR_REPOSITORY%:%BUILD_NUMBER%'
-                bat 'docker push %ECR_REPOSITORY%:%BUILD_NUMBER%'
-            }
-        }
-
-        stage('Terraform Format Check') {
-            steps {
-                dir('terraform') {
-                    bat 'terraform fmt -check -recursive'
-                }
-            }
-        }
-
-        stage('Terraform Init') {
-            steps {
-                dir('terraform') {
-                    bat 'terraform init'
-                }
-            }
-        }
-
-        stage('Terraform Validate') {
-            steps {
-                dir('terraform') {
-                    bat 'terraform validate'
-                }
-            }
-        }
-
-        stage('Terraform Plan') {
-            steps {
-                dir('terraform') {
-                    bat 'terraform plan -var-file="environments/dev/dev.tfvars"'
-                }
-            }
-        }
-    }
 
     post {
         success {
