@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(
+            name: 'Terraform actions'
+            choices: [apply, destroy]
+            description: 'Choose the Terraform action to perform'
+        )
+    }
+
     environment {
         IMAGE_NAME = "dms-backend"
         ECR_REGISTRY = "371397858660.dkr.ecr.eu-north-1.amazonaws.com"
@@ -74,11 +82,14 @@ pipeline {
                             '''
                         }
                         bat 'terraform plan -var-file="environments/dev/dev.tfvars"'
-                        // Apply infrastructure
-                        // bat 'terraform apply -var-file="environments/dev/dev.tfvars" -auto-approve'
 
-                        // Destroy infrastructure when testing is complete
-                        bat 'terraform destroy -var-file="environments/dev/dev.tfvars" -auto-approve'
+                        bat '''
+                            if "%Terraform actions%" == "apply" (
+                                terraform apply -var-file="environments/dev/dev.tfvars" -auto-approve
+                            ) else (
+                                terraform destroy -var-file="environments/dev/dev.tfvars" -auto-approve
+                            )
+                        '''
                     }
                 }
             }
