@@ -74,7 +74,11 @@ pipeline {
                             '''
                         }
                         bat 'terraform plan -var-file="environments/dev/dev.tfvars"'
-                        bat 'terraform apply -var-file="environments/dev/dev.tfvars" -auto-approve'
+                        // Apply infrastructure
+                        // bat 'terraform apply -var-file="environments/dev/dev.tfvars" -auto-approve'
+
+                        // Destroy infrastructure when testing is complete
+                        bat 'terraform destroy -var-file="environments/dev/dev.tfvars" -auto-approve'
                     }
                 }
             }
