@@ -3,8 +3,8 @@ pipeline {
 
     parameters {
         choice(
-            name: 'Terraform actions'
-            choices: [apply, destroy]
+            name: 'Terraform actions',
+            choices: [apply, destroy],
             description: 'Choose the Terraform action to perform'
         )
     }
