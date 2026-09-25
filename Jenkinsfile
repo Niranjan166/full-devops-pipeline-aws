@@ -91,7 +91,7 @@ pipeline {
                         bat 'terraform plan -var-file="environments/%ENVIRONMENT%/%ENVIRONMENT%.tfvars"'
 
                         bat '''
-                            if "%Terraform actions%" == "apply" (
+                            if "%ACTION%" == "apply" (
                                 terraform apply -var-file="environments/%ENVIRONMENT%/%ENVIRONMENT%.tfvars" -auto-approve
                             ) else (
                                 terraform destroy -var-file="environments/%ENVIRONMENT%/%ENVIRONMENT%.tfvars" -auto-approve
