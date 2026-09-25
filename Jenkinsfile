@@ -65,7 +65,9 @@ pipeline {
                     bat 'docker push %ECR_REPOSITORY%:%BUILD_NUMBER%'
 
                     dir('terraform') {
-                        bat 'if exist environments\\%ENVIRONMENT%\\%ENVIRONMENT%.tfvars del /q environments\\%ENVIRONMENT%\\%ENVIRONMENT%.tfvars'
+                        bat 'if exist environments\\dev\\dev.tfvars del /q environments\\dev\\dev.tfvars'
+                        bat 'if exist environments\\staging\\staging.tfvars del /q environments\\staging\\staging.tfvars'
+                        bat 'if exist environments\\prod\\prod.tfvars del /q environments\\prod\\prod.tfvars'
                         bat 'terraform fmt -check -recursive -diff'
                         bat 'terraform init'
                         bat 'terraform validate'
