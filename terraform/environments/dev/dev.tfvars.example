@@ -1,17 +1,13 @@
 project_name      = "dms"
 environment       = "dev"
 aws_region        = "us-east-1"
-
 vpc_cidr          = "10.0.0.0/16"
 az_count          = 2
-
 instance_type     = "t3.micro"
 key_pair_name     = "dms-dev-key"
 lifecycle_days    = 30
-
 db_name           = "dms_db"
 db_username       = "admin"
 db_password       = "replace_with_secret"
 db_instance_class = "db.t3.micro"
-
 alert_email       = "niranjan01125@gmail.com"

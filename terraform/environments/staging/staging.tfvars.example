@@ -1,11 +1,13 @@
 project_name = "dms"
 environment  = "staging"
 aws_region   = "us-east-1"
-
-vpc_cidr     = "10.0.0.0/16"
+vpc_cidr     = "10.1.0.0/16"
 az_count     = 2
-
 instance_type = "t2.micro"
+key_pair_name = "dms-staging-key"
+lifecycle_days = 60
+db_name = "dms_db"
 db_username   = "admin"
 db_password   = "replace_with_secret"
+db_instance_class = "db.t3.micro"
 alert_email   = "your-email@example.com"
