@@ -4,7 +4,7 @@ on:
   #workflow_dispatch:
   push:
     branches:
-      - prod
+      - main
     #paths:
       #- "terraform/**" this is commented out because paths works if their is any changes made in the terraform folder, but we want to trigger the workflow when there is a push to prod branch, regardless of the changes made in the terraform folder.
 
