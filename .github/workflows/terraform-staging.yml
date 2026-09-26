@@ -19,7 +19,8 @@ jobs:
       TF_VAR_db_password: ${{ secrets.TF_VAR_db_password }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -31,6 +32,10 @@ jobs:
 
       - run: terraform init
       - run: terraform fmt -check -recursive
+      - name: Create staging.tfvars
+        run: |
+          cp environments/staging/staging.tfvars.example environments/staging/staging.tfvars
+          sed -i 's|replace_with_secret|${{ secrets.TF_VAR_db_password }}|' environments/staging/staging.tfvars  
       - run: terraform validate
       - run: terraform plan -var-file=environments/staging/staging.tfvars
-      - run: terraform apply -auto-approve -var-file=environments/staging/staging.tfvars
+      #- run: terraform apply -auto-approve -var-file=environments/staging/staging.tfvars
