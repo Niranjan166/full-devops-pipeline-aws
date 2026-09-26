@@ -6,9 +6,9 @@ on:
       - dev
       - staging
       - prod
-    paths:
-      - "application/backend/**"
-      - ".github/workflows/docker-build.yml"
+    #paths:
+      #- "application/backend/**"
+      #- ".github/workflows/docker-build.yml"
 
 jobs:
   docker:

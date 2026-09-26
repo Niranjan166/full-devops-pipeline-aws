@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - staging
-    paths:
-      - "terraform/**"
+    #paths:
+      #- "terraform/**"
 
 jobs:
   terraform:
