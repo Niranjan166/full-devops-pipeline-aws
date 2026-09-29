@@ -16,10 +16,11 @@ spec:                         # Desired state/configuration of the Deployment
     spec:                     # Specification of what runs inside the Pod
       containers:             # List of containers
         - name: dms-backend
-          image: 371397858660.dkr.ecr.us-east-1.amazonaws.com/dms-backend:latest   # Docker image that Kubernetes will pull from Amazon ECR
+          image: 371397858660.dkr.ecr.us-east-1.amazonaws.com/dms-backend:${{ env.IMAGE_TAG }}   # Docker image that Kubernetes will pull from Amazon ECR
+          # Image is updated by GitHub Actions using the immutable commit-based tag.
           ports:              # Port exposed by the container
             - containerPort: 5000     # Our Node.js backend listens on port 5000
-
+  
           env:
             # RDS endpoint — replace with your actual Terraform output
             - name: DB_HOST
