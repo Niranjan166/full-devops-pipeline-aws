@@ -1,0 +1,60 @@
+apiVersion: apps/v1           # Use the Deployment API from the apps/v1 API group
+kind: Deployment              # Create a Kubernetes Deployment
+metadata:
+  name: dms-backend           # Name of the Deployment
+  labels:                     # Labels attached to the Deployment itself
+    app: dms-backend          # Label used to identify this application
+spec:                         # Desired state/configuration of the Deployment
+  replicas: 1                 # Number of Pod replicas we want running
+  selector:                   # Defines which Pods belong to this Deployment
+    matchLabels:
+      app: dms-backend
+  template:                   # Template used to create the Pods
+    metadata:                 # Metadata for each Pod created by this Deployment
+      labels:                 # This must match selector.matchLabels above
+        app: dms-backend
+    spec:                     # Specification of what runs inside the Pod
+      containers:             # List of containers
+        - name: dms-backend
+          image: 371397858660.dkr.ecr.us-east-1.amazonaws.com/dms-backend:latest   # Docker image that Kubernetes will pull from Amazon ECR
+          ports:              # Port exposed by the container
+            - containerPort: 5000     # Our Node.js backend listens on port 5000
+
+          env:
+            # RDS endpoint — replace with your actual Terraform output
+            - name: DB_HOST
+              value: "dms-dev-mysql.ckpcqk0k4pq0.us-east-1.rds.amazonaws.com"
+
+            # MySQL default port
+            - name: DB_PORT
+              value: "3306"
+
+            # Pull username/password/database from Kubernetes Secret
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: dms-db-secret
+                  key: DB_USER
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dms-db-secret
+                  key: DB_PASSWORD
+
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: dms-db-secret
+                  key: DB_NAME
+
+            - name: PORT
+              value: "5000"
+
+          resources:
+           requests:
+             cpu: 100m
+             memory: 128Mi
+           limits:
+             cpu: 500m
+             memory: 512Mi

@@ -1,0 +1,16 @@
+apiVersion: v1
+
+# Create a Kubernetes Service
+kind: Service
+
+metadata:
+  name: dms-backend-service
+
+spec:
+  type: ClusterIP
+  selector:
+    app: dms-backend
+
+  ports:
+    - port: 5000
+      targetPort: 5000
